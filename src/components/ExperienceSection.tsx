@@ -1,44 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
 import { IconBriefcase, IconCalendar, IconMapPin } from "@tabler/icons-react";
+import { portfolioData } from "@/lib/utils";
 
-const experiences = [
-  {
-    title: "Senior Software Engineer",
-    company: "Tech Innovations Inc.",
-    location: "San Francisco, CA",
-    period: "2021 - Present",
-    description: [
-      "Led a team of 5 developers in building a customer-facing portal using React, Node.js, and MongoDB",
-      "Implemented CI/CD pipelines using GitHub Actions, reducing deployment time by 40%",
-      "Optimized database queries, improving application performance by 30%",
-    ],
-  },
-  {
-    title: "Full Stack Developer",
-    company: "Digital Solutions Ltd.",
-    location: "New York, NY",
-    period: "2018 - 2021",
-    description: [
-      "Developed responsive web applications using React.js and Express.js",
-      "Built RESTful APIs for mobile applications serving over 10,000 daily users",
-      "Collaborated with UX designers to implement user-friendly interfaces",
-    ],
-  },
-  {
-    title: "Web Developer",
-    company: "Creative Webworks",
-    location: "Seattle, WA",
-    period: "2016 - 2018",
-    description: [
-      "Designed and developed websites for small to medium-sized businesses",
-      "Maintained WordPress installations for 15+ clients",
-      "Implemented SEO strategies, increasing organic traffic by 50%",
-    ],
-  },
-];
-
-const ExperienceCard = ({ experience, index }: { experience: typeof experiences[0]; index: number }) => {
+const ExperienceCard = ({ experience, index }: { experience: typeof portfolioData.experiences[0]; index: number }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -57,7 +22,7 @@ const ExperienceCard = ({ experience, index }: { experience: typeof experiences[
       
       <div className="flex items-center gap-2 text-gray-400 mb-4">
         <IconCalendar size={16} />
-        <span className="text-sm">{experience.period}</span>
+        <span className="text-sm">{experience.startDate} - {experience.endDate}</span>
       </div>
       
       <ul className="list-disc list-inside space-y-1 text-gray-300">
@@ -90,7 +55,7 @@ const ExperienceSection = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {experiences.map((experience, index) => (
+          {portfolioData.experiences.map((experience, index) => (
             <ExperienceCard key={index} experience={experience} index={index} />
           ))}
         </div>

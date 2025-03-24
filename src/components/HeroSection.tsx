@@ -48,8 +48,8 @@ const HeroSection = () => {
               revealText="Bharath Shroff"
               className="bg-transparent border-none p-0 hover:bg-transparent"
             >
-              <div className="mt-2">
-                <p className="text-sm text-neutral-300">Jack of All Trades, Master of Some</p>
+              <div className="text-white">
+                <p className="text-sm mt-2 text-neutral-300">Jack of All Trades, Master of Some</p>
               </div>
             </TextRevealCard>
           </div>
