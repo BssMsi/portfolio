@@ -20,19 +20,34 @@ const ContactSection = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+
       setIsSubmitted(true);
       setFormData({ name: "", email: "", message: "" });
       
       // Reset success message after 5 seconds
       setTimeout(() => setIsSubmitted(false), 5000);
-    }, 1500);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      // You might want to show an error message to the user here
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -64,16 +79,9 @@ const ContactSection = () => {
             <div className="space-y-4 mb-8">
               <div className="flex items-center space-x-4">
                 <IconMail size={24} className="text-blue-400" />
-                <a href="mailto:contact@bharathshroff.com" className="text-gray-300 hover:text-blue-400 transition-colors duration-300">
-                  bharathsshroff@yahoo.com
-                </a>
-              </div>
-              
-              <div className="flex items-center space-x-4">
-                <IconPhone size={24} className="text-blue-400" />
-                <a href="tel:+1234567890" className="text-gray-300 hover:text-blue-400 transition-colors duration-300">
-                  +1 (234) 567-890
-                </a>
+                <span className="text-gray-300">
+                  Send me a message using the form
+                </span>
               </div>
             </div>
             
