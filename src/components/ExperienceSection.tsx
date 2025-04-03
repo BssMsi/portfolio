@@ -3,6 +3,20 @@ import { motion } from "framer-motion";
 import { IconBriefcase, IconCalendar, IconMapPin } from "@tabler/icons-react";
 import { portfolioData } from "@/lib/utils";
 
+const formatDate = (dateString: string | null | undefined) => {
+  if (!dateString) return 'Present';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+};
+
+const sortExperiences = (experiences: typeof portfolioData.experiences) => {
+  return [...experiences].sort((a, b) => {
+    const dateA = a.endDate ? new Date(a.endDate) : new Date();
+    const dateB = b.endDate ? new Date(b.endDate) : new Date();
+    return dateB.getTime() - dateA.getTime();
+  });
+};
+
 const ExperienceCard = ({ experience, index }: { experience: typeof portfolioData.experiences[0]; index: number }) => {
   return (
     <motion.div
@@ -22,7 +36,7 @@ const ExperienceCard = ({ experience, index }: { experience: typeof portfolioDat
       
       <div className="flex items-center gap-2 text-gray-400 mb-4">
         <IconCalendar size={16} />
-        <span className="text-sm">{experience.startDate} - {experience.endDate}</span>
+        <span className="text-sm">{formatDate(experience.startDate)} - {formatDate(experience.endDate)}</span>
       </div>
       
       <ul className="list-disc list-inside space-y-1 text-gray-300">
@@ -37,6 +51,8 @@ const ExperienceCard = ({ experience, index }: { experience: typeof portfolioDat
 };
 
 const ExperienceSection = () => {
+  const sortedExperiences = sortExperiences(portfolioData.experiences);
+
   return (
     <section id="experience" className="w-full py-24 bg-gray-900">
       <div className="max-w-6xl mx-auto px-4">
@@ -55,7 +71,7 @@ const ExperienceSection = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {portfolioData.experiences.map((experience, index) => (
+          {sortedExperiences.map((experience, index) => (
             <ExperienceCard key={index} experience={experience} index={index} />
           ))}
         </div>
