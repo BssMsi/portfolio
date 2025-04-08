@@ -1,4 +1,4 @@
-import { clsx, type ClassValue } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -114,5 +114,47 @@ export const portfolioData = {
     'cloud': ["Databricks", "Azure Data Factory", "Azure DevOps", "AWS", "GCP"],
     'programming_languages': ['Python', 'SQL', 'HTML', 'JavaScript', 'CSS', 'bash'],
     'frameworks': ['NextJS', 'React Native', 'Express JS', 'FastAPI'],
-  }
+  },
+  projects: [
+    {
+      title: "E-Commerce Platform",
+      description: "A full-stack e-commerce platform with product management, cart functionality, and payment integration.",
+      technologies: ["React", "Node.js", "Express", "MongoDB", "Stripe API"],
+      image: "/projects/ecommerce.jpg",
+      link: "#",
+      featured: true,
+    },
+    {
+      title: "Project Management Tool",
+      description: "A collaborative project management application with real-time updates and task tracking features.",
+      technologies: ["Next.js", "Firebase", "Tailwind CSS", "React Query"],
+      image: "/projects/project-management.jpg",
+      link: "#",
+      featured: true,
+    },
+    {
+      title: "Social Media Dashboard",
+      description: "An analytics dashboard for tracking engagement across multiple social media platforms.",
+      technologies: ["React", "Chart.js", "Material UI", "Social Media APIs"],
+      image: "/projects/social-dashboard.jpg",
+      link: "#",
+      featured: false,
+    },
+    {
+      title: "Weather Application",
+      description: "A responsive weather application providing real-time forecasts and location-based weather data.",
+      technologies: ["JavaScript", "OpenWeather API", "Geolocation API", "CSS3"],
+      image: "/projects/weather-app.jpg",
+      link: "#",
+      featured: false,
+    },
+    {
+      title: "Portfolio Website",
+      description: "A personal portfolio website showcasing skills, experience, and projects.",
+      technologies: ["Next.js", "Framer Motion", "Tailwind CSS", "Vercel"],
+      image: "/projects/portfolio.jpg",
+      link: "#",
+      featured: false,
+    },
+  ],
 };

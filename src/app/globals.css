@@ -30,4 +30,22 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.scroller {
+  --animation-duration: 80s;
+  --animation-direction: forwards;
+}
+
+.scroller .animate-scroll {
+  animation: scroll var(--animation-duration) var(--animation-direction) linear infinite;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 0.5rem));
+  }
 } 

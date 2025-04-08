@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { IconBriefcase, IconCalendar, IconMapPin } from "@tabler/icons-react";
 import { portfolioData } from "@/lib/utils";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 
 const formatDate = (dateString: string | null | undefined) => {
   if (!dateString) return 'Present';
@@ -39,13 +40,17 @@ const ExperienceCard = ({ experience, index }: { experience: typeof portfolioDat
         <span className="text-sm">{formatDate(experience.startDate)} - {formatDate(experience.endDate)}</span>
       </div>
       
-      <ul className="list-disc list-inside space-y-1 text-gray-300">
+      <div className="space-y-2">
         {experience.description.map((item, i) => (
-          <li key={i} className="text-sm">
-            {item}
-          </li>
+          <TextGenerateEffect
+            key={i}
+            words={item}
+            className="text-gray-300 text-sm"
+            duration={0.8}
+            filter={true}
+          />
         ))}
-      </ul>
+      </div>
     </motion.div>
   );
 };
