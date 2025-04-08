@@ -1,7 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger);
 
 export const InfiniteMovingCards = ({
   items,
@@ -16,80 +21,83 @@ export const InfiniteMovingCards = ({
   pauseOnHover?: boolean;
   className?: string;
 }) => {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const scrollerRef = React.useRef<HTMLUListElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLUListElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    addAnimation();
-  }, []);
-  const [start, setStart] = useState(false);
+    if (!containerRef.current || !scrollerRef.current || !sectionRef.current) return;
 
-  function addAnimation() {
-    if (containerRef.current && scrollerRef.current) {
-      const scrollerContent = Array.from(scrollerRef.current.children);
-      scrollerContent.forEach((item) => {
-        const duplicatedItem = item.cloneNode(true);
-        if (scrollerRef.current) {
-          scrollerRef.current.appendChild(duplicatedItem);
-        }
-      });
+    // Calculate the total width of all items
+    const items = Array.from(scrollerRef.current.children);
+    const totalWidth = items.reduce((acc, item) => acc + item.getBoundingClientRect().width, 0);
+    
+    // Set the container width to match the total width of items
+    scrollerRef.current.style.width = `${totalWidth}px`;
 
-      getDirection();
-      getSpeed();
-      setStart(true);
-    }
-  }
+    // Calculate the center offset
+    const containerWidth = containerRef.current.getBoundingClientRect().width;
+    const firstItemWidth = items[0].getBoundingClientRect().width;
+    const centerOffset = (containerWidth - firstItemWidth) / 2;
 
-  const getDirection = () => {
-    if (containerRef.current) {
-      if (direction === "left") {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "forwards"
-        );
-      } else {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "reverse"
-        );
-      }
-    }
-  };
+    // Set initial position to center the first card
+    gsap.set(scrollerRef.current, {
+      x: centerOffset
+    });
 
-  const getSpeed = () => {
-    if (containerRef.current) {
-      if (speed === "fast") {
-        containerRef.current.style.setProperty("--animation-duration", "20s");
-      } else if (speed === "normal") {
-        containerRef.current.style.setProperty("--animation-duration", "40s");
-      } else {
-        containerRef.current.style.setProperty("--animation-duration", "80s");
-      }
-    }
-  };
+    // Create the horizontal scroll animation
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top top",
+        end: "+=300%", // Adjust this value to control how long the horizontal scroll lasts
+        pin: true, // Pins the section while scrolling
+        scrub: 1, // Smooth scrolling effect
+        anticipatePin: 1,
+        onLeave: () => {
+          // Optional: Add any cleanup or transition effects when leaving the section
+        },
+      },
+    });
+
+    // Animate the cards container
+    tl.to(scrollerRef.current, {
+      x: direction === "left" ? -(totalWidth - containerWidth + centerOffset) : centerOffset,
+      ease: "none",
+    });
+
+    // Cleanup
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, [direction]);
 
   return (
-    <div
-      ref={containerRef}
-      className={cn(
-        "scroller relative z-20 max-w-7xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
-        className
-      )}
+    <div 
+      ref={sectionRef}
+      className={cn("relative h-screen w-full overflow-hidden", className)}
     >
-      <ul
-        ref={scrollerRef}
+      <div
+        ref={containerRef}
         className={cn(
-          "flex w-max min-w-full shrink-0 flex-nowrap gap-4 py-4",
-          start && "animate-scroll",
-          pauseOnHover && "hover:[animation-play-state:paused]"
+          "scroller relative z-20 max-w-7xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
+          className
         )}
       >
-        {items.map((item, idx) => (
-          <li key={idx} className="relative shrink-0">
-            {item}
-          </li>
-        ))}
-      </ul>
+        <ul
+          ref={scrollerRef}
+          className={cn(
+            "flex w-max min-w-full shrink-0 flex-nowrap gap-4 py-4",
+            pauseOnHover && "hover:[animation-play-state:paused]"
+          )}
+        >
+          {items.map((item, idx) => (
+            <li key={idx} className="relative shrink-0">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }; 
